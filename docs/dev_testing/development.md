@@ -159,7 +159,6 @@ ABI: C:/Users/liche/hello_world/target/hello_world.abi
 
 ### 搭建 FISCO BCOS 区块链
 
-TO-DO 3.0文档
 当前，FISCO BCOS 对 Wasm 虚拟机的支持尚未合入主干版本，仅开放了实验版本的源代码及可执行二进制文件供开发者体验，因此需要按照以下步骤手动搭建 FISCO BCOS 区块链：
 
 1. 根据[依赖项说明](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/docs/installation.html#id2)中的要求安装依赖项；
@@ -185,10 +184,7 @@ TO-DO 3.0文档
     bash nodes/127.0.0.1/start_all.sh
     ```
 
-### 部署 Java SDK
-
-TO-CHECK
-Java SDK提供了访问FISCO BCOS 节点的Java API，支持节点状态查询、部署和调用合约等功能，基于Java SDK可开发区块链应用，目前支持FISCO BCOS 2.0+。Java SDK部署方式可参考其[官方文档](https://gitee.com/FISCO-BCOS/java-sdk)。
+### 使用 console
 
 ```eval_rst
 .. code-block:: shell
@@ -201,18 +197,19 @@ Java SDK提供了访问FISCO BCOS 节点的Java API，支持节点状态查询�
    cp -n conf/config-example.toml conf/config.toml
    #配置SDK证书，将SDK证书拷贝到Java SDK的示例如下(这里假设nodes和console均在fisco目录下)
    cp -r ../../nodes/127.0.0.1/sdk/* conf/
+   bash start.sh
 ```
 
 ```eval_rst
 
 .. hint::
 
-   若无法访问GitHub，则请执行 ``git clone https://gitee.com/FISCO-BCOS/console`` 命令克隆java console。
+   若无法访问GitHub，则请执行 ``git clone https://gitee.com/FISCO-BCOS/console`` 命令克隆 console。
 ```
 
 ### 将合约部署至区块链
 
-使用 Node.js SDK CLI 工具提供的`deploy`子命令，我们可以将 Hello World 合约构建生成的 Wasm 格式字节码部署至真实的区块链上，`deploy`子命令的使用说明如下：
+使用 console 提供的`deploy`子命令，我们可以将 Hello World 合约构建生成的 Wasm 格式字节码部署至真实的区块链上，`deploy`子命令的使用说明如下：
 
 ```
 cli.js exec deploy <contract> [parameters..]
@@ -231,25 +228,31 @@ Options:
   -h, --help  Show help                                                [boolean]
 ```
 
-执行该命令时需要传入字节码文件的路径及构造函数的参数，并通过`--abi`选项传入 ABI 文件的路径。当根据配置手册(https://gitee.com/FISCO-BCOS/nodejs-sdk#22-%E9%85%8D%E7%BD%AE)配置好 CLI 工具后，可以使用以下命令部署 HelloWorld 智能合约。由于合约中的构造函数不接受任何参数，因此无需在部署时提供参数：
+合约路径：合约文件的路径，支持相对路径、绝对路径和默认路径三种方式。用户输入为文件名时，从默认目录获取文件，默认目录为: contracts/solidity，比如：HelloWorld
 
 ```shell
-node ./cli.js exec deploy C:/Users/liche/hello_world/target/hello_world.wasm --abi C:/Users/liche/hello_world/target/hello_world.abi
+# 部署HelloWorld合约，默认路径
+[group:1]> deploy HelloWorld.sol
+contract address:0xc0ce097a5757e2b6e189aa70c7d55770ace47767
+
+# 部署HelloWorld合约，相对路径
+[group:1]> deploy contracts/solidity/HelloWorld.sol
+contract address:0xd653139b9abffc3fe07573e7bacdfd35210b5576
+
+# 部署HelloWorld合约，绝对路径
+[group:1]> deploy /root/fisco/console/contracts/solidity/HelloWorld.sol
+contract address:0x85517d3070309a89357c829e4b9e2d23ee01d881
 ```
 
-部署成功后，返回如下形式的结果，其中包含状态码、合约地址及交易哈希：
+部署成功后，返回合约地址：
 
 ```json
-{
-    "status": "0x0",
-    "contractAddress": "0x039ced1cd5bea5ace04de8e74c66e312ba4a48af",
-    "transactionHash": "0xf84811a5c7a5d3a4452a65e6929a49e69d9a55a0f03b5a03a3e8956f80e9ff41"
-}
+contract address:0x85517d3070309a89357c829e4b9e2d23ee01d881
 ```
 
 ## 调用
 
-使用 Node.js SDK CLI 工具提供的`call`子命令，我们可以调用已被部署到链上的智能合约，`call`子命令的使用方式如下：
+使用 console 提供的`call`子命令，我们可以调用已被部署到链上的智能合约，`call`子命令的使用方式如下：
 
 ```
 cli.js exec call <contractName> <contractAddress> <function> [parameters..]
@@ -272,7 +275,7 @@ Options:
 执行该命令时需要传入合约名、合约地址、要调用的合约方法名及传递给该合约方法的参数。以调用 HelloWorld 智能合约中的`get`方法为例，可以使用以下命令调用该方法。由于`get`方法不接受任何参数，因此无需在调用时提供参数：
 
 ```bash
-node .\cli.js exec call hello_world 0x039ced1cd5bea5ace04de8e74c66e312ba4a48af get
+call HelloWorld 0x6849F21D1E455e9f0712b1e99Fa4FCD23758E8F1 get
 ```
 
 调用成功后，返回如下形式结果：
