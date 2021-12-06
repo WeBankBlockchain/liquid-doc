@@ -161,50 +161,52 @@ ABI: C:/Users/liche/hello_world/target/hello_world.abi
 
 当前，FISCO BCOS 对 Wasm 虚拟机的支持尚未合入主干版本，仅开放了实验版本的源代码及可执行二进制文件供开发者体验，因此需要按照以下步骤手动搭建 FISCO BCOS 区块链：
 
-1. 根据[依赖项说明](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/docs/installation.html#id2)中的要求安装依赖项；
+1. 根据[依赖项说明](https://fisco-bcos-documentation-3x.readthedocs.io/zh/release-3.0.0/docs/quick_start/air_installation.html)中的要求安装依赖项；
 
 2. 下载实验版本的建链工具 build_chain.sh：
 
     ```shell
     cd ~ && mkdir -p fisco && cd fisco
-    curl -#LO https://github.com/WeBankBlockchain/liquid/releases/download/v1.0.0-rc1/build_chain.sh && chmod u+x build_chain.sh
+    curl -#LO curl -#LO https://github.com/FISCO-BCOS/FISCO-BCOS/releases/download/v3.0.0-rc1/build_chain.sh && chmod u+x build_chain.sh && chmod u+x build_chain.sh
     ```
 
     ```eval_rst
 
     .. hint::
 
-       若无法访问GitHub，则请执行 ``curl -#LO https://gitee.com/WeBankBlockchain/liquid/attach_files/651253/download/build_chain.sh`` 命令下载 build_chain.sh。
+       若无法访问GitHub，则请执行 ``curl -#LO https://osp-1257653870.cos.ap-guangzhou.myqcloud.com/FISCO-BCOS/FISCO-BCOS/releases/v3.0.0-rc1/build_chain.sh`` 命令下载 build_chain.sh。
     ```
 
-3. 使用 build_chain.sh 在本地搭建一条单群组 4 节点的 FISCO BCOS 区块链并运行。更多 build_chain.sh 的使用方法可参考其[使用文档](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/docs/manual/build_chain.html)：
+3. 使用 build_chain.sh 在本地搭建一条单群组 4 节点的 FISCO BCOS 区块链并运行。更多 build_chain.sh 的使用方法可参考其[使用文档](https://fisco-bcos-documentation-3x.readthedocs.io/zh/release-3.0.0/docs/tutorial/air/build_chain.html?highlight=build_chain)：
     
     ```shell
-    bash build_chain.sh -l 127.0.0.1:4 -p 30300,20200,8545
+    sed -i "s/is_wasm=false/is_wasm=true/g" nodes/127.0.0.1/node0/config.ini
+    sed -i "s/is_wasm=false/is_wasm=true/g" nodes/127.0.0.1/node1/config.ini
+    sed -i "s/is_wasm=false/is_wasm=true/g" nodes/127.0.0.1/node2/config.ini
+    sed -i "s/is_wasm=false/is_wasm=true/g" nodes/127.0.0.1/node3/config.ini
+    bash build_chain.sh -l 127.0.0.1:4 -p 30300,20200
     bash nodes/127.0.0.1/start_all.sh
     ```
 
-### 使用 console
+### 配置和使用 console
 
 ```eval_rst
 .. code-block:: shell
    :linenos:
    :emphasize-lines: 2,4
-
-   git clone -b release-3.1.0 https://github.com/FISCO-BCOS/console.git
-   cd console && ./gradlew build
-   cd dist
+   
+   sudo apt install -y default-jdk
+   cd ~/fisco && curl -LO https://github.com/FISCO-BCOS/console/releases/download/v3.0.0-rc1/download_console.sh && bash download_console.sh
    cp -n conf/config-example.toml conf/config.toml
-   #配置SDK证书，将SDK证书拷贝到Java SDK的示例如下(这里假设nodes和console均在fisco目录下)
-   cp -r ../../nodes/127.0.0.1/sdk/* conf/
-   bash start.sh
+   cp -r nodes/127.0.0.1/sdk/* conf/
+   cd ~/fisco/console && bash start.sh
 ```
 
 ```eval_rst
 
 .. hint::
 
-   若无法访问GitHub，则请执行 ``git clone https://gitee.com/FISCO-BCOS/console`` 命令克隆 console。
+   若无法访问GitHub，则请执行 ``curl -#LO https://gitee.com/FISCO-BCOS/console/releases/download/v3.0.0-rc1/download_console.sh`` 命令克隆 console。
 ```
 
 ### 将合约部署至区块链
@@ -212,76 +214,80 @@ ABI: C:/Users/liche/hello_world/target/hello_world.abi
 使用 console 提供的`deploy`子命令，我们可以将 Hello World 合约构建生成的 Wasm 格式字节码部署至真实的区块链上，`deploy`子命令的使用说明如下：
 
 ```
-cli.js exec deploy <contract> [parameters..]
-
-Deploy a contract written in Solidity or Liquid
-
-Positionals:
-  contract    The path of the contract                       [string] [required]
-  parameters  The parameters(split by space) of constructor
-                                                           [array] [default: []]
-
-Options:
-  --version   Show version number                                      [boolean]
-  --abi, -a   The path of the corresponding ABI file                    [string]
-  --who, -w   Who will do this operation                                [string]
-  -h, --help  Show help                                                [boolean]
+Usage:
+deploy solidity contractNameOrPath parameters...
+* contractNameOrPath -- The name of a contract or the path of a contract (Default load contract from the "contracts/solidity" path when using contractName).
+* parameters -- Parameters will be passed to constructor when deploying the contract.
 ```
 
-执行该命令时需要传入字节码文件的路径及构造函数的参数，并通过`--abi`选项传入 ABI 文件的路径。当根据配置手册(https://gitee.com/FISCO-BCOS/nodejs-sdk#22-%E9%85%8D%E7%BD%AE)配置好 CLI 工具后，可以使用以下命令部署 HelloWorld 智能合约。由于合约中的构造函数不接受任何参数，因此无需在部署时提供参数：
+- 合约路径：合约文件的路径，支持相对路径、绝对路径和默认路径三种方式。用户输入为文件名时，从默认目录获取文件，默认目录为: contracts/solidity，比如：HelloWorld。
 
 ```shell
-node ./cli.js exec deploy C:/Users/liche/hello_world/target/hello_world.wasm --abi C:/Users/liche/hello_world/target/hello_world.abi
+# 部署HelloWorld合约，默认路径
+[group]: />  deploy HelloWorld
+contract address:0xc0ce097a5757e2b6e189aa70c7d55770ace47767
+
+# 部署HelloWorld合约，相对路径
+[group]: />  deploy contracts/solidity/HelloWorld.sol
+contract address:0xd653139b9abffc3fe07573e7bacdfd35210b5576
+
+# 部署HelloWorld合约，绝对路径
+[group]: />  deploy ~/fisco/console/contracts/solidity/HelloWorld.sol
+contract address:0x85517d3070309a89357c829e4b9e2d23ee01d881
 ```
 
 部署成功后，返回如下形式的结果，其中包含状态码、合约地址及交易哈希：
 
 ```json
 {
-    "status": "0x0",
-    "contractAddress": "0x039ced1cd5bea5ace04de8e74c66e312ba4a48af",
-    "transactionHash": "0xf84811a5c7a5d3a4452a65e6929a49e69d9a55a0f03b5a03a3e8956f80e9ff41"
+    transaction hash: 0xa3e70e06a7c1a3a23aa921c68b765901223808f0e50a9394ea80e0d230138614
+    contract address: 0x6849F21D1E455e9f0712b1e99Fa4FCD23758E8F1
+    currentAccount: 0x26e92ebe4bbfc16259c3619054e6a5937e0e23c4
+
 }
 ```
+###### 注：
+- 部署用户编写的合约，可以将solidity合约文件放到控制台根目录的contracts/solidity/目录下，然后进行部署即可。按tab键可以搜索contracts/solidity/目录下的合约名称。
+- 若需要部署的合约引用了其他合约或library库，引用格式为import "./XXX.sol";。其相关引入的合约和library库均放在contracts/solidity/目录。
+- 如果合约引用了library库，library库文件的名称必须以Lib字符串开始，以便于区分是普通合约与library库文件。library库文件不能单独部署和调用。
 
 ## 调用
 
-使用 Node.js SDK CLI 工具提供的`call`子命令，我们可以调用已被部署到链上的智能合约，`call`子命令的使用方式如下：
+使用 console 提供的`call`子命令，我们可以调用已被部署到链上的智能合约，`call`子命令的使用方式如下：
 
 ```
-cli.js exec call <contractName> <contractAddress> <function> [parameters..]
-
-Call a contract by a function and parameters
-
-Positionals:
-  contractName     The name of a contract                    [string] [required]
-  contractAddress  20 Bytes - The Address of a contract      [string] [required]
-  function         The function of a contract                [string] [required]
-  parameters       The parameters(split by space) of a function
-                                                           [array] [default: []]
-
-Options:
-  --version   Show version number                                      [boolean]
-  --who, -w   Who will do this operation                                [string]
-  -h, --help  Show help                                                [boolean]
+Call a contract by a function and parameters.
+Usage:
+call contractNameOrPath contractAddress function parameters
+* contractNameOrPath -- The name of a contract or the path of a contract, when set to "latest", the contract address is the latest contract address (Default load contract from the "contracts/solidity" path when using contractName).
+* contractAddress -- 20 Bytes - The address of a contract.
+* function -- The function of a contract.
+* parameters -- The parameters(splited by a space) of a function.
 ```
 
-执行该命令时需要传入合约名、合约地址、要调用的合约方法名及传递给该合约方法的参数。以调用 HelloWorld 智能合约中的`get`方法为例，可以使用以下命令调用该方法。由于`get`方法不接受任何参数，因此无需在调用时提供参数：
+参数：
+- 合约路径：合约文件的路径，支持相对路径、绝对路径和默认路径三种方式。用户输入为文件名时，从默认目录获取文件，默认目录为: contracts/solidity。
+- 合约地址: 部署合约获取的地址。
+- 合约接口名：调用的合约接口名。
+- 参数：由合约接口参数决定。**参数由空格分隔；数组参数需要加上中括号，比如[1,2,3]，数组中是字符串或字节类型，加双引号，例如[“alice”,”bob”]，注意数组参数中不要有空格；布尔类型为true或者false。**
 
 ```bash
-node .\cli.js exec call hello_world 0x039ced1cd5bea5ace04de8e74c66e312ba4a48af get
+call HelloWorld 0x175b16a1299c7af3e2e49b97e68a44734257a35e get
 ```
 
 调用成功后，返回如下形式结果：
 
 ```json
 {
-    "status": "0x0",
-    "output": {
-        "function": "get()",
-        "result": ["Alice"]
-    }
+Return code: 0
+description: transaction executed successfully
+Return message: Success
+---------------------------------------------------------------------------------------------
+Return values:
+[
+    "Hello,World!"
+]
 }
 ```
 
-其中`output.result`字段中包含了`get`方法的返回值。可以看到，`get`方法返回了字符串“Alice”。
+其中`Return Values`字段中包含了`get`方法的返回值。可以看到，`get`方法返回了字符串“Hello,World!”。
