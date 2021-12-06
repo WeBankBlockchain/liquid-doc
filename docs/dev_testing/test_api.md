@@ -33,7 +33,7 @@ Liquid 的特色功能之一是能够直接在合约中编写单元测试用例�
 
 ## API 列表
 
-// TO-DO pub fn set_caller_callee(caller: Address, callee: Address)
+TO-DO pub fn set_caller_callee(caller: Address, callee: Address)
 <ul class="method-introduction">
 <li>
 

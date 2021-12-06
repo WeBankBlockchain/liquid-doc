@@ -159,7 +159,7 @@ ABI: C:/Users/liche/hello_world/target/hello_world.abi
 
 ### 搭建 FISCO BCOS 区块链
 
-// TO-DO 3.0文档
+TO-DO 3.0文档
 当前，FISCO BCOS 对 Wasm 虚拟机的支持尚未合入主干版本，仅开放了实验版本的源代码及可执行二进制文件供开发者体验，因此需要按照以下步骤手动搭建 FISCO BCOS 区块链：
 
 1. 根据[依赖项说明](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/docs/installation.html#id2)中的要求安装依赖项；
@@ -187,7 +187,7 @@ ABI: C:/Users/liche/hello_world/target/hello_world.abi
 
 ### 部署 Java SDK
 
-// TO-CHECK
+TO-CHECK
 Java SDK提供了访问FISCO BCOS 节点的Java API，支持节点状态查询、部署和调用合约等功能，基于Java SDK可开发区块链应用，目前支持FISCO BCOS 2.0+。Java SDK部署方式可参考其[官方文档](https://gitee.com/FISCO-BCOS/java-sdk)。
 
 ```eval_rst
