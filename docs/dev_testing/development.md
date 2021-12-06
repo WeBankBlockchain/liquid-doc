@@ -209,7 +209,7 @@ ABI: C:/Users/liche/hello_world/target/hello_world.abi
 
 ### 将合约部署至区块链
 
-使用 Node.js SDK CLI 工具提供的`deploy`子命令，我们可以将 Hello World 合约构建生成的 Wasm 格式字节码部署至真实的区块链上，`deploy`子命令的使用说明如下：
+使用 console 提供的`deploy`子命令，我们可以将 Hello World 合约构建生成的 Wasm 格式字节码部署至真实的区块链上，`deploy`子命令的使用说明如下：
 
 ```
 cli.js exec deploy <contract> [parameters..]
