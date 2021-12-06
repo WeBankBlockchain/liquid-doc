@@ -243,7 +243,6 @@ contract address:0x85517d3070309a89357c829e4b9e2d23ee01d881
     transaction hash: 0xa3e70e06a7c1a3a23aa921c68b765901223808f0e50a9394ea80e0d230138614
     contract address: 0x6849F21D1E455e9f0712b1e99Fa4FCD23758E8F1
     currentAccount: 0x26e92ebe4bbfc16259c3619054e6a5937e0e23c4
-
 }
 ```
 ###### 注：
@@ -279,14 +278,14 @@ call HelloWorld 0x175b16a1299c7af3e2e49b97e68a44734257a35e get
 
 ```json
 {
-Return code: 0
-description: transaction executed successfully
-Return message: Success
----------------------------------------------------------------------------------------------
-Return values:
-[
-    "Hello,World!"
-]
+    Return code: 0
+    description: transaction executed successfully
+    Return message: Success
+    ---------------------------------------------------------------------------------------------
+    Return values:
+    [
+        "Hello,World!"
+    ]
 }
 ```
 
