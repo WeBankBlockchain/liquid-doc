@@ -24,7 +24,7 @@ cd ./hello_world
 
 hello_world 目录内的文件结构如下所示：
 
-```
+```bash
 hello_world/
 ├── .gitignore
 ├── .liquid
@@ -38,13 +38,13 @@ hello_world/
 
 其中各文件的功能如下：
 
--   `.gitignore`：隐藏文件，用于告诉版本管理软件[Git](https://git-scm.com/)哪些文件或目录不需要被添加到版本管理中。Liquid 会默认将某些不重要的问题件（如编译过程中生成的临时文件）排除在版本管理之外，如果不需要使用 Git 管理对项目版本进行管理，可以忽略该文件；
+- `.gitignore`：隐藏文件，用于告诉版本管理软件[Git](https://git-scm.com/)哪些文件或目录不需要被添加到版本管理中。Liquid 会默认将某些不重要的问题件（如编译过程中生成的临时文件）排除在版本管理之外，如果不需要使用 Git 管理对项目版本进行管理，可以忽略该文件；
 
--   `.liquid/`：隐藏目录，用于实现 Liquid 智能合的内部功能，其中`abi_gen`子目录下包含了 ABI 生成器的实现，该目录下的编译配置及代码逻辑是固定的，如果被修改可能会造成无法正常生成 ABI；
+- `.liquid/`：隐藏目录，用于实现 Liquid 智能合的内部功能，其中`abi_gen`子目录下包含了 ABI 生成器的实现，该目录下的编译配置及代码逻辑是固定的，如果被修改可能会造成无法正常生成 ABI；
 
--   `Cargo.toml`：项目配置清单，主要包括项目信息、外部库依赖、编译配置等，一般而言无需修改该文件，除非有特殊的需求（如引用额外的第三方库、调整优化等级等）；
+- `Cargo.toml`：项目配置清单，主要包括项目信息、外部库依赖、编译配置等，一般而言无需修改该文件，除非有特殊的需求（如引用额外的第三方库、调整优化等级等）；
 
--   `src/lib.rs`：Liquid 智能合约项目根文件，合约代码存放于此文件中。智能合约项目创建完毕后，`lib.rs`文件中会自动填充部分样板代码，我们可以基于这些样板代码做进一步的开发。
+- `src/lib.rs`：Liquid 智能合约项目根文件，合约代码存放于此文件中。智能合约项目创建完毕后，`lib.rs`文件中会自动填充部分样板代码，我们可以基于这些样板代码做进一步的开发。
 
 我们将[HelloWorld 合约](../quickstart/example.html#hello-world)中的代码复制至`lib.rs`文件中后，便可进行后续步骤。
 
@@ -59,7 +59,7 @@ cargo test
 ```eval_rst
 .. admonition:: 注意
 
-   上述命令与创建合约项目时的命令有两点不同：
+   上述命令与创建合约项目时的命令有所不同：
 
    #. 命令中并不包含 ``liquid`` 子命令，因为Liquid可以使用标准cargo单元测试框架来执行单元测试，因此并不需要调用 ``cargo-liquid`` 。
 ```
@@ -68,16 +68,16 @@ cargo test
 
 ```bash
 running 2 tests
-test hello_world::tests::set_works ... ok
 test hello_world::tests::get_works ... ok
+test hello_world::tests::set_works ... ok
 
-test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
    Doc-tests hello_world
 
 running 0 tests
 
-test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 ```
 
 从结果中可以看出，所有用例均通过了测试，因此可以有信心认为智能合约中的逻辑实现是正确无误的 😄。我们接下来将开始着手构建 HelloWorld 智能合约，并把它部署至真正的区块链上。
@@ -90,7 +90,7 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
 cargo liquid build
 ```
 
-该命令会引导 Rust 语言编译器以`wasm32-unknown-unknown`为目标对智能合约代码进行编译，最终生成 Wasm 格式字节码及 ABI。命令执行完成后，会显示如下形式的内容：
+该命令会引导 Rust 语言编译器以`wasm32-unknown-unknown`为目标对智能合约代码进行编译，最终生成 Wasm 格式字节码及 ABI。cargo-liquid会在编译过程中对合约代码做冲突字段分析，并将分析结果放在abi文件中，底层根据冲突信息自动并行执行无冲突的合约调用。命令执行完成后，会显示如下形式的内容：
 
 ```
 :-) Done in 9 seconds, your project is ready now:
@@ -104,8 +104,6 @@ ABI: C:/Users/liche/hello_world/target/hello_world.abi
 [
     {
         "inputs": [],
-        "payable": false,
-        "stateMutability": "nonpayable",
         "type": "constructor"
     },
     {
@@ -114,26 +112,31 @@ ABI: C:/Users/liche/hello_world/target/hello_world.abi
         "name": "get",
         "outputs": [
             {
-                "name": "",
+                "internalType": "string",
                 "type": "string"
             }
         ],
-        "payable": false,
-        "stateMutability": "view",
         "type": "function"
     },
     {
+        "conflictFields": [
+            {
+                "kind": 0,
+                "path": [],
+                "read_only": false,
+                "slot": 0
+            }
+        ],
         "constant": false,
         "inputs": [
             {
+                "internalType": "string",
                 "name": "name",
                 "type": "string"
             }
         ],
         "name": "set",
         "outputs": [],
-        "payable": false,
-        "stateMutability": "nonpayable",
         "type": "function"
     }
 ]
@@ -156,128 +159,113 @@ ABI: C:/Users/liche/hello_world/target/hello_world.abi
 
 ### 搭建 FISCO BCOS 区块链
 
-当前，FISCO BCOS 对 Wasm 虚拟机的支持尚未合入主干版本，仅开放了实验版本的源代码及可执行二进制文件供开发者体验，因此需要按照以下步骤手动搭建 FISCO BCOS 区块链：
+当前，FISCO BCOS 3.0已经支持wasm模式，请按照以下步骤手动搭建 FISCO BCOS 区块链：
 
-1. 根据[依赖项说明](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/docs/installation.html#id2)中的要求安装依赖项；
+1. 根据[依赖项说明](https://fisco-bcos-doc.readthedocs.io/zh_CN/latest/docs/quick_start/air_installation.html)中的要求安装依赖项；
 
-2. 下载实验版本的建链工具 build_chain.sh：
+2. 下载建链工具 build_chain.sh：
 
     ```shell
     cd ~ && mkdir -p fisco && cd fisco
-    curl -#LO https://github.com/WeBankBlockchain/liquid/releases/download/v1.0.0-rc1/build_chain.sh && chmod u+x build_chain.sh
+    curl -#LO curl -#LO https://github.com/FISCO-BCOS/FISCO-BCOS/releases/download/v3.0.0-rc1/build_chain.sh && chmod u+x build_chain.sh && chmod u+x build_chain.sh
     ```
 
     ```eval_rst
 
     .. hint::
 
-       若无法访问GitHub，则请执行 ``curl -#LO https://gitee.com/WeBankBlockchain/liquid/attach_files/651253/download/build_chain.sh`` 命令下载 build_chain.sh。
+       若无法访问GitHub，则请执行 ``curl -#LO https://osp-1257653870.cos.ap-guangzhou.myqcloud.com/FISCO-BCOS/FISCO-BCOS/releases/v3.0.0-rc1/build_chain.sh`` 命令下载 build_chain.sh。
     ```
 
-3. 使用 build_chain.sh 在本地搭建一条单群组 4 节点的 FISCO BCOS 区块链并运行。更多 build_chain.sh 的使用方法可参考其[使用文档](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/docs/manual/build_chain.html)：
+3. 使用 build_chain.sh 在本地搭建一条单群组 4 节点的 FISCO BCOS 区块链并运行。更多 build_chain.sh 的使用方法可参考其[使用文档](https://fisco-bcos-doc.readthedocs.io/zh_CN/latest/docs/tutorial/air/build_chain.html)：
 
     ```shell
-    bash build_chain.sh -l 127.0.0.1:4 -p 30300,20200,8545
+    bash build_chain.sh -l 127.0.0.1:4 -p 30300,20200 -w
     bash nodes/127.0.0.1/start_all.sh
     ```
 
-### 部署 Node.js SDK
+### 配置和使用 console
 
-由于 Liquid 当前暂为实验项目，因此目前仅有 FISCO BCOS Node.js SDK 提供的 CLI 工具能够部署及调用 Liquid 智能合约。Node.js SDK 部署方式可参考其[官方文档](https://gitee.com/FISCO-BCOS/nodejs-sdk#fisco-bcos-nodejs-sdk)。但需要注意的是，Liquid 智能合约相关的功能目前同样未合入 Node.js SDK 的主干版本。因此当从 GitHub 克隆了 Node.js SDK 的源代码后，需要先手动切换至`liquid`分支并随后安装[SCALE](https://substrate.dev/docs/en/knowledgebase/advanced/codec)编解码器：
+请参考[这里](https://fisco-bcos-doc.readthedocs.io/zh_CN/latest/docs/quick_start/air_installation.html#id7)安装依赖，下文是安装Java之后的console下载和配置步骤。
 
 ```eval_rst
 .. code-block:: shell
    :linenos:
    :emphasize-lines: 2,4
 
-   git clone https://github.com/FISCO-BCOS/nodejs-sdk.git
-   cd nodejs-sdk && git checkout liquid
-   npm install
-   cd packages/cli/scale_codec && npm install
+   cd ~/fisco && curl -LO https://github.com/FISCO-BCOS/console/releases/download/v3.0.0-rc1/download_console.sh && bash download_console.sh
+   cp -n console/conf/config-example.toml console/conf/config.toml
+   cp -r nodes/127.0.0.1/sdk/* console/conf/
+   cd console && bash start.sh
 ```
 
 ```eval_rst
 
 .. hint::
 
-   若无法访问GitHub，则请执行 ``git clone https://gitee.com/FISCO-BCOS/nodejs-sdk.git`` 命令克隆Node.js SDK。
+   若无法访问GitHub，则请执行 ``curl -#LO https://gitee.com/FISCO-BCOS/console/releases/download/v3.0.0-rc1/download_console.sh`` 命令克隆 console。
 ```
 
 ### 将合约部署至区块链
 
-使用 Node.js SDK CLI 工具提供的`deploy`子命令，我们可以将 Hello World 合约构建生成的 Wasm 格式字节码部署至真实的区块链上，`deploy`子命令的使用说明如下：
+使用 console 提供的`deploy`子命令，我们可以将 Hello World 合约构建生成的 Wasm 格式字节码部署至区块链上，`deploy`子命令的使用说明如下：
 
-```
-cli.js exec deploy <contract> [parameters..]
+```bash
 
-Deploy a contract written in Solidity or Liquid
-
-Positionals:
-  contract    The path of the contract                       [string] [required]
-  parameters  The parameters(split by space) of constructor
-                                                           [array] [default: []]
-
-Options:
-  --version   Show version number                                      [boolean]
-  --abi, -a   The path of the corresponding ABI file                    [string]
-  --who, -w   Who will do this operation                                [string]
-  -h, --help  Show help                                                [boolean]
+Usage:
+deploy liquid bin abi path parameters...
+* bin -- The path of binary file after contract being compiled via cargo-liquid.
+* abi -- The path of ABI file after contract being compiled via cargo-liquid.
+* path -- The path where the contract will be located at.
+* parameters -- Parameters will be passed to constructor when deploying the contract.
 ```
 
-执行该命令时需要传入字节码文件的路径及构造函数的参数，并通过`--abi`选项传入 ABI 文件的路径。当根据配置手册(https://gitee.com/FISCO-BCOS/nodejs-sdk#22-%E9%85%8D%E7%BD%AE)配置好 CLI 工具后，可以使用以下命令部署 HelloWorld 智能合约。由于合约中的构造函数不接受任何参数，因此无需在部署时提供参数：
+执行该命令时需要传入**字节码(wasm)**文件的路径、**abi文件**路径、**合约部署路径**及**构造函数的参数**。可以使用以下命令部署 HelloWorld 智能合约。由于合约中的构造函数不接受任何参数，因此无需在部署时提供参数：
 
 ```shell
-node ./cli.js exec deploy C:/Users/liche/hello_world/target/hello_world.wasm --abi C:/Users/liche/hello_world/target/hello_world.abi
+deploy C:/Users/liche/hello_world/target/hello_world.wasm C:/Users/liche/hello_world/target/hello_world.abi /helloworld
 ```
 
 部署成功后，返回如下形式的结果，其中包含状态码、合约地址及交易哈希：
 
-```json
-{
-    "status": "0x0",
-    "contractAddress": "0x039ced1cd5bea5ace04de8e74c66e312ba4a48af",
-    "transactionHash": "0xf84811a5c7a5d3a4452a65e6929a49e69d9a55a0f03b5a03a3e8956f80e9ff41"
-}
+```bash
+transaction hash: 0x08d4b696c02b107e7d4fff122f621d1eeefb81e1764d5d74fd5ae07c4b774a54
+contract address: /hello_world
+currentAccount: 0x0929dcf8268561c573092985a5d2086b03873c40
 ```
 
 ## 调用
 
-使用 Node.js SDK CLI 工具提供的`call`子命令，我们可以调用已被部署到链上的智能合约，`call`子命令的使用方式如下：
+使用 console 提供的`call`子命令，我们可以调用已被部署到链上的智能合约，`call`子命令的使用方式如下：
 
 ```
-cli.js exec call <contractName> <contractAddress> <function> [parameters..]
-
-Call a contract by a function and parameters
-
-Positionals:
-  contractName     The name of a contract                    [string] [required]
-  contractAddress  20 Bytes - The Address of a contract      [string] [required]
-  function         The function of a contract                [string] [required]
-  parameters       The parameters(split by space) of a function
-                                                           [array] [default: []]
-
-Options:
-  --version   Show version number                                      [boolean]
-  --who, -w   Who will do this operation                                [string]
-  -h, --help  Show help                                                [boolean]
+Call a contract by a function and parameters.
+Usage:
+call path function parameters
+* path -- The path where the contract located at, when set to "latest", the path of latest contract deployment will be used.
+* function -- The function of a contract.
+* parameters -- The parameters(splited by a space) of a function.
 ```
 
 执行该命令时需要传入合约名、合约地址、要调用的合约方法名及传递给该合约方法的参数。以调用 HelloWorld 智能合约中的`get`方法为例，可以使用以下命令调用该方法。由于`get`方法不接受任何参数，因此无需在调用时提供参数：
 
 ```bash
-node .\cli.js exec call hello_world 0x039ced1cd5bea5ace04de8e74c66e312ba4a48af get
+[group]: /> call /hello_world get
+
 ```
 
 调用成功后，返回如下形式结果：
 
-```json
-{
-    "status": "0x0",
-    "output": {
-        "function": "get()",
-        "result": ["Alice"]
-    }
-}
+```bash
+---------------------------------------------------------------------------------------------
+Return code: 0
+description: transaction executed successfully
+Return message: Success
+---------------------------------------------------------------------------------------------
+Return value size:1
+Return types: (string)
+Return values:(Alice)
+---------------------------------------------------------------------------------------------
 ```
 
-其中`output.result`字段中包含了`get`方法的返回值。可以看到，`get`方法返回了字符串“Alice”。
+其中`Return values`字段中包含了`get`方法的返回值。可以看到，`get`方法返回了字符串“Alice”。
