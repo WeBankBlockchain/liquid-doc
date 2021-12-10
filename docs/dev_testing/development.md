@@ -167,7 +167,7 @@ ABI: C:/Users/liche/hello_world/target/hello_world.abi
 
     ```shell
     cd ~ && mkdir -p fisco && cd fisco
-    curl -#LO curl -#LO https://github.com/FISCO-BCOS/FISCO-BCOS/releases/download/v3.0.0-rc1/build_chain.sh && chmod u+x build_chain.sh && chmod u+x build_chain.sh
+    curl -#LO https://github.com/FISCO-BCOS/FISCO-BCOS/releases/download/v3.0.0-rc1/build_chain.sh && chmod u+x build_chain.sh && chmod u+x build_chain.sh
     ```
 
     ```eval_rst
