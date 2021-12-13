@@ -37,23 +37,15 @@ cargo --version
 此外需要安装以下工具链组件：
 
 ```shell
-rustup toolchain install nightly
+rustup toolchain install install nightly-2021-06-23 --component rust-src rustc-dev llvm-tools-preview
+rustup default nightly-2021-06-23
 rustup target add wasm32-unknown-unknown
-rustup component add rust-src
-rustup component add rustc-dev
 ```
 
 ```eval_rst
 .. admonition:: 注意
 
    由于Liquid使用了少量目前尚不稳定的Rust语言特性，因此在构建时需要依赖 ``nightly`` 版本的 ``rustc`` 。但是这些特性目前已经被广泛应用在Rust项目中，因此其可靠性值得信赖。随着Rust语言迭代演进，这些特性终将变为稳定特性。
-```
-
-查看当前rustup已安装的版本并切换为nightly：
-
-```shell
-rustup toolchain list
-rustup default nightly-2021-06-23
 ```
 
 ```eval_rst
