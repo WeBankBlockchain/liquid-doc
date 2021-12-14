@@ -37,7 +37,7 @@ cargo --version
 此外需要安装以下工具链组件：
 
 ```shell
-rustup toolchain install install nightly-2021-06-23 --component rust-src rustc-dev llvm-tools-preview
+rustup toolchain install nightly-2021-06-23 --component rust-src rustc-dev llvm-tools-preview
 rustup default nightly-2021-06-23
 rustup target add wasm32-unknown-unknown
 ```
