@@ -99,13 +99,13 @@ brew install cmake
 `cargo-liquid` 是用于辅助开发 Liquid 智能合约的命令行工具，在终端中执行以下命令安装：
 
 ```shell
-cargo install --git https://github.com/WeBankBlockchain/cargo-liquid --branch dev --force
+cargo install --git https://github.com/WeBankBlockchain/cargo-liquid --tag v1.0.0-rc2 --force
 ```
 
 ```eval_rst
 .. admonition:: 注意
 
-   若无法正常访问GitHub，则请执行 ``cargo install --git https://gitee.com/WeBankBlockchain/cargo-liquid --branch dev --force`` 命令进行安装。
+   若无法正常访问GitHub，则请执行 ``cargo install --git https://gitee.com/WeBankBlockchain/cargo-liquid --tag v1.0.0-rc2 --force`` 命令进行安装。
 ```
 
 ## 安装 Binaryen（可选）
