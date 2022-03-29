@@ -4,7 +4,10 @@
 .. admonition:: 注意
 
    受限于网络情况及机器性能，本小节中部分依赖项的安装过程可能较为耗时，请耐心等待。必要时可能需要配置网络代理。
+
+   推荐切换Rustup官方镜像源为国内镜像源，请参考 `Rustup 镜像安装帮助 <https://mirrors.tuna.tsinghua.edu.cn/help/rustup/>`_ 更换镜像源。
 ```
+
 
 ## 部署 Rust 编译环境
 
@@ -94,6 +97,20 @@ Mac下可以直接通过 ``homebrew`` 安装：
 brew install cmake
 ```
 
+如果CentOS的yum资源无cmake3（如CentOS 7），则需要手动下载cmake3进行配置
+
+以下载`cmake 3.21.3`版本为例，到[cmake官网](https://cmake.org/download/)下载包后，解压到`/data/home/software`目录，得到了`cmake-3.21.3-linux-x86_64`目录，并修改`/etc/profile`以设置cmake环境变量
+
+```bash
+vi /etc/profile
+export CMAKE3_HOME=//data/home/software/cmake-3.21.3-linux-x86_64
+export PATH=$PATH:$CMAKE3_HOME/bin
+
+# 环境变量生效
+source /etc/profile
+```
+
+
 ## 安装 cargo-liquid
 
 `cargo-liquid` 是用于辅助开发 Liquid 智能合约的命令行工具，在终端中执行以下命令安装：
@@ -108,8 +125,54 @@ cargo install --git https://github.com/WeBankBlockchain/cargo-liquid --tag v1.0.
    若无法正常访问GitHub，则请执行 ``cargo install --git https://gitee.com/WeBankBlockchain/cargo-liquid --tag v1.0.0-rc2 --force`` 命令进行安装。
 ```
 
-## 安装 Binaryen（可选）
+如果使用的是CentOS系统，安装前，确保按此[Issue检查依赖](https://github.com/WeBankBlockchain/cargo-liquid/issues/14)
+- 确保cmake版本大于3.12
+- 安装devtoolset并启用
+- 安装rust工具链
+```bash
+#请确保cmake版本大于3.12
+#请参考下述命令使用gcc7
+sudo yum install -y epel-release centos-release-scl
+sudo yum install -y devtoolset-7
+source /opt/rh/devtoolset-7/enable
+#请参考下述命令使用要求版本的rust工具链
+rustup toolchain install nightly-2021-06-23 --component rust-src rustc-dev llvm-tools-preview
+rustup default nightly-2021-06-23
+```
+确保上述工具版本符合要求后，再次重新执行cargo install命令安装
+
+开始安装后，以gitee为例，会输出类似的日志：
+```
+Updating git repository `https://gitee.com/WeBankBlockchain/cargo-liquid`
+  Installing cargo-liquid v1.0.0-rc2 (https://gitee.com/WeBankBlockchain/cargo-liquid?tag=v1.0.0-rc2#5da4da65)
+Updating `git://mirrors.ustc.edu.cn/crates.io-index` index
+  Fetch [=======>                 ]  34.20%, 5.92MiB/s
+```
+如果下载crates包失败，可重新执行cargo install命令重试下载
+
+安装成功后，会输出如下日志：
+```
+Compiling wabt v0.10.0
+    Finished release [optimized] target(s) in 1m 33s
+  Installing /data/home/webase/.cargo/bin/cargo-liquid
+  Installing /data/home/webase/.cargo/bin/liquid-analy
+   Installed package `cargo-liquid v1.0.0-rc2 (https://gitee.com/WeBankBlockchain/cargo-liquid?tag=v1.0.0-rc2#5da4da65)` (executables `cargo-liquid`, `liquid-analy`)
+```
+
+## 推荐安装 Binaryen（可选）
+
+推荐安装Binaryen以优化编译过程
 
 Binaryen 项目中包含了一系列 Wasm 字节码分析及优化工具，其中如 `wasm-opt` 等工具会在 Liquid 智能合约的构建过程中使用。请参考其[官方文档](https://github.com/WebAssembly/binaryen#building)。
 
-除根据官方文档的编译安装方式外， Ubuntu下可通过 ``sudo apt install binaryen`` 下载安装（如使用Ubuntu，则系统版本不低于20.04， 其他操作系统可参照[此处](https://pkgs.org/download/binaryen)查看是否可直接通过包管理工具安装）， Mac下可直接通过 ``brew install binaryen`` 下载安装binaryen。
+除根据官方文档的编译安装方式外
+- Ubuntu下可通过 ``sudo apt install binaryen`` 下载安装（如使用Ubuntu，则系统版本不低于20.04
+- Mac下可直接通过 ``brew install binaryen`` 下载安装binaryen
+- 其他操作系统可参照[此处](https://pkgs.org/download/binaryen)查看是否可直接通过包管理工具安装）
+  - 如CentOS则参考
+  ```bash
+  # 下载binaryen的rpm包
+  wget https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/b/binaryen-104-1.el7.x86_64.rpm
+  # 安装rpm包
+  sudo rpm -ivh binaryen-104-1.el7.x86_64.rpm
+  ```
