@@ -86,7 +86,7 @@ registry = "git://mirrors.ustc.edu.cn/crates.io-index"
 
 ```shell
 # Ubuntu请执行下面的命令
-sudo apt install cmak
+sudo apt install cmake
 # CentOS请执行下面的命令
 sudo yum install cmake3
 ```
@@ -103,13 +103,12 @@ brew install cmake
 
 ```bash
 vi /etc/profile
-export CMAKE3_HOME=//data/home/software/cmake-3.21.3-linux-x86_64
-export PATH=$PATH:$CMAKE3_HOME/bin
+export CMAKE3_HOME=/data/home/software/cmake-3.21.3-linux-x86_64
+export PATH=$CMAKE3_HOME/bin:$PATH
 
 # 环境变量生效
 source /etc/profile
 ```
-
 
 ## 安装 cargo-liquid
 
