@@ -115,13 +115,13 @@ source /etc/profile
 `cargo-liquid` 是用于辅助开发 Liquid 智能合约的命令行工具，在终端中执行以下命令安装：
 
 ```shell
-cargo install --git https://github.com/WeBankBlockchain/cargo-liquid --tag v1.0.0-rc2 --force
+cargo install --git https://github.com/WeBankBlockchain/cargo-liquid --tag v1.0.0-rc3 --force
 ```
 
 ```eval_rst
 .. admonition:: 注意
 
-   若无法正常访问GitHub，则请执行 ``cargo install --git https://gitee.com/WeBankBlockchain/cargo-liquid --tag v1.0.0-rc2 --force`` 命令进行安装。
+   若无法正常访问GitHub，则请执行 ``cargo install --git https://gitee.com/WeBankBlockchain/cargo-liquid --tag v1.0.0-rc3 --force`` 命令进行安装。
 ```
 
 如果使用的是CentOS系统，安装前，确保按此[Issue检查依赖](https://github.com/WeBankBlockchain/cargo-liquid/issues/14)
@@ -143,7 +143,7 @@ rustup default nightly-2021-06-23
 开始安装后，以gitee为例，会输出类似的日志：
 ```
 Updating git repository `https://gitee.com/WeBankBlockchain/cargo-liquid`
-  Installing cargo-liquid v1.0.0-rc2 (https://gitee.com/WeBankBlockchain/cargo-liquid?tag=v1.0.0-rc2#5da4da65)
+  Installing cargo-liquid v1.0.0-rc3 (https://gitee.com/WeBankBlockchain/cargo-liquid?tag=v1.0.0-rc3#5da4da65)
 Updating `git://mirrors.ustc.edu.cn/crates.io-index` index
   Fetch [=======>                 ]  34.20%, 5.92MiB/s
 ```
@@ -155,7 +155,7 @@ Compiling wabt v0.10.0
     Finished release [optimized] target(s) in 1m 33s
   Installing /data/home/webase/.cargo/bin/cargo-liquid
   Installing /data/home/webase/.cargo/bin/liquid-analy
-   Installed package `cargo-liquid v1.0.0-rc2 (https://gitee.com/WeBankBlockchain/cargo-liquid?tag=v1.0.0-rc2#5da4da65)` (executables `cargo-liquid`, `liquid-analy`)
+   Installed package `cargo-liquid v1.0.0-rc3 (https://gitee.com/WeBankBlockchain/cargo-liquid?tag=v1.0.0-rc3#5da4da65)` (executables `cargo-liquid`, `liquid-analy`)
 ```
 
 ## 推荐安装 Binaryen（可选）
