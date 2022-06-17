@@ -115,13 +115,13 @@ source /etc/profile
 `cargo-liquid` 是用于辅助开发 Liquid 智能合约的命令行工具，在终端中执行以下命令安装：
 
 ```shell
-cargo install --git https://github.com/WeBankBlockchain/cargo-liquid --tag v1.0.0-rc3 --force
+cargo install --git https://github.com/WeBankBlockchain/cargo-liquid --branch main --locked --force
 ```
 
 ```eval_rst
 .. admonition:: 注意
 
-   若无法正常访问GitHub，则请执行 ``cargo install --git https://gitee.com/WeBankBlockchain/cargo-liquid --tag v1.0.0-rc3 --force`` 命令进行安装。
+   若无法正常访问GitHub，则请执行 ``cargo install --git https://gitee.com/WeBankBlockchain/cargo-liquid --branch main --locked --force`` 命令进行安装。
 ```
 
 如果使用的是CentOS系统，安装前，确保按此[Issue检查依赖](https://github.com/WeBankBlockchain/cargo-liquid/issues/14)
