@@ -40,8 +40,8 @@ cargo --version
 此外需要安装以下工具链组件：
 
 ```shell
-rustup toolchain install nightly-2021-06-23 --component rust-src rustc-dev llvm-tools-preview
-rustup default nightly-2021-06-23
+rustup toolchain install nightly-2023-01-03 --component rust-src rustc-dev llvm-tools-preview
+rustup default nightly-2023-01-03
 rustup target add wasm32-unknown-unknown
 ```
 
@@ -86,7 +86,7 @@ registry = "git://mirrors.ustc.edu.cn/crates.io-index"
 
 ```shell
 # Ubuntu请执行下面的命令
-sudo apt install cmake
+sudo apt install cmake build-essential
 # CentOS请执行下面的命令
 sudo yum install cmake3
 ```
@@ -125,9 +125,11 @@ cargo install --git https://github.com/WeBankBlockchain/cargo-liquid --branch ma
 ```
 
 如果使用的是CentOS系统，安装前，确保按此[Issue检查依赖](https://github.com/WeBankBlockchain/cargo-liquid/issues/14)
+
 - 确保cmake版本大于3.12
 - 安装devtoolset并启用
 - 安装rust工具链
+
 ```bash
 #请确保cmake版本大于3.12
 #请参考下述命令使用gcc7
@@ -135,9 +137,10 @@ sudo yum install -y epel-release centos-release-scl
 sudo yum install -y devtoolset-7
 source /opt/rh/devtoolset-7/enable
 #请参考下述命令使用要求版本的rust工具链
-rustup toolchain install nightly-2021-06-23 --component rust-src rustc-dev llvm-tools-preview
-rustup default nightly-2021-06-23
+rustup toolchain install nightly-2023-01-03 --component rust-src rustc-dev llvm-tools-preview
+rustup default nightly-2023-01-03
 ```
+
 确保上述工具版本符合要求后，再次重新执行cargo install命令安装
 
 开始安装后，以gitee为例，会输出类似的日志：
@@ -147,9 +150,11 @@ Updating git repository `https://gitee.com/WeBankBlockchain/cargo-liquid`
 Updating `git://mirrors.ustc.edu.cn/crates.io-index` index
   Fetch [=======>                 ]  34.20%, 5.92MiB/s
 ```
+
 如果下载crates包失败，可重新执行cargo install命令重试下载
 
 安装成功后，会输出如下日志：
+
 ```
 Compiling wabt v0.10.0
     Finished release [optimized] target(s) in 1m 33s
